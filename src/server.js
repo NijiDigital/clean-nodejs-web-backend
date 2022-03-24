@@ -1,8 +1,18 @@
 import Fastify from 'fastify'
+import dbConnectorPlugin from './plugins/db-connector-plugin'
+import routesPlugin from './plugins/routes-plugin'
 
-const fastify = Fastify()
+const fastify = Fastify({
+  logger: {
+    prettyPrint: {
+      translateTime: true,
+      ignore: 'pid,hostname,reqId,responseTime,req,res',
+    },
+  },
+})
 
-fastify.get('/', async () => ({ hello: 'world' }))
+fastify.register(dbConnectorPlugin)
+fastify.register(routesPlugin)
 
 const start = async () => {
   try {
