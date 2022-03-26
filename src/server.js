@@ -1,9 +1,11 @@
 import Fastify from 'fastify'
+import config from './config'
 import dbConnectorPlugin from './plugins/db-connector-plugin'
 import routesPlugin from './plugins/routes-plugin'
 
 const fastify = Fastify({
   logger: {
+    level: config.logLevel,
     prettyPrint: {
       translateTime: true,
       ignore: 'pid,hostname,reqId,responseTime,req,res',
@@ -11,6 +13,8 @@ const fastify = Fastify({
   },
 })
 
+fastify.decorate('config', config)
+fastify.log.debug(`config : ${JSON.stringify(config)}`)
 fastify.register(dbConnectorPlugin)
 fastify.register(routesPlugin)
 
